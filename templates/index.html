@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ app_title }}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <!-- Fondo reticulado animado -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header glass">
+      <div class="brand">
+        <div class="logo">PGx</div>
+        <div>
+          <h1>{{ app_title }}</h1>
+          <p class="subtitle">Farmacogenómica asistida por IA · Entrada múltiple</p>
+        </div>
+      </div>
+      <div class="status" id="health">
+        <!-- Se completan dinámicamente con /health -->
+        <span class="chip" data-key="CIViC">CIViC</span>
+        <span class="chip" data-key="VEP">VEP</span>
+        <span class="chip" data-key="OncoKB">OncoKB</span>
+        <span class="chip" data-key="ClinVar">ClinVar</span>
+        <span class="chip ia" data-key="IA">IA</span>
+      </div>
+    </header>
+
+    <main class="grid">
+      <!-- PANEL ENTRADA -->
+      <section class="card glass">
+        <h2>Datos del paciente</h2>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Pseudónimo</label>
+            <input id="pseudonym" type="text" placeholder="PGX-USER" />
+          </div>
+          <div class="field">
+            <label>Diagnóstico</label>
+            <input id="diagnosis" type="text" placeholder="Ej: Adenocarcinoma de pulmón" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Tumor</label>
+          <div class="combo">
+            <input id="tumor_type" type="text" placeholder="Ej: adenocarcinoma de pulmón" />
+            <div id="tumor_suggestions" class="suggestions"></div>
+          </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="vcf">VCF</button>
+          <button class="tab-btn" data-tab="manual">Manual</button>
+          <button class="tab-btn" data-tab="biomarkers">Biomarcadores</button>
+          <button class="tab-btn" data-tab="pathology">Patología</button>
+        </div>
+
+        <div class="tab-content">
+          <!-- VCF -->
+          <div id="tab-vcf" class="tab-pane active">
+            <div id="drop" class="drop">
+              <div class="drop-inner">
+                <div class="drop-icon">⬆️</div>
+                <p><strong>Arrastrá</strong> o hacé click para subir un VCF</p>
+                <input id="vcf" name="vcf" type="file" accept=".vcf" hidden/>
+                <div id="filename" class="filehint"></div>
+              </div>
+            </div>
+            <div class="btns">
+              <button id="demo_egfr" class="ghost">Demo EGFR Ex19del</button>
+              <button id="demo_kras" class="ghost">Demo KRAS G12D</button>
+              <button id="demo_braf" class="ghost">Demo BRAF V600E</button>
+            </div>
+          </div>
+
+          <!-- Manual -->
+          <div id="tab-manual" class="tab-pane">
+            <div id="manual-variants-container" class="stack">
+              <div class="manual-variant row">
+                <input type="text" placeholder="Gen (ej: EGFR)" class="gene-input">
+                <input type="text" placeholder="Variante (ej: L858R)" class="variant-input">
+                <button class="icon remove-variant" title="Quitar">✕</button>
+              </div>
+            </div>
+            <button id="add-variant" class="soft">+ Añadir variante</button>
+          </div>
+
+          <!-- Biomarkers -->
+          <div id="tab-biomarkers" class="tab-pane">
+            <div id="biomarkers-container" class="stack">
+              <div class="biomarker row">
+                <select class="biomarker-name">
+                  <option value="">Seleccionar biomarcador</option>
+                  <option value="MSI-H">MSI-H</option>
+                  <option value="PD-L1">PD-L1</option>
+                  <option value="TMB-H">TMB-H</option>
+                  <option value="HER2">HER2</option>
+                </select>
+                <select class="biomarker-status">
+                  <option value="positive">Positivo</option>
+                  <option value="negative">Negativo</option>
+                </select>
+                <button class="icon remove-biomarker" title="Quitar">✕</button>
+              </div>
+            </div>
+            <button id="add-biomarker" class="soft">+ Añadir biomarcador</button>
+          </div>
+
+          <!-- Patología -->
+          <div id="tab-pathology" class="tab-pane">
+            <label>Informe de Patología</label>
+            <textarea id="pathology-report" rows="6" placeholder="Pegá el informe aquí..."></textarea>
+          </div>
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="actions">
+          <button id="analyze" class="primary glow">Analizar Todo</button>
+          <button id="demo" class="primary alt">Demo rápida</button>
+          <button id="reset" class="ghost">Reset</button>
+          <span class="spacer"></span>
+          <button id="export_pdf" class="soft">Exportar PDF</button>
+          <button id="export_json" class="soft">Exportar JSON</button>
+          <button id="help_btn" class="ghost">❓ Ayuda</button>
+        </div>
+        <div id="banner" class="banner" role="status"></div>
+      </section>
+
+      <!-- PANEL RESULTADOS -->
+      <section class="card glass">
+        <h2>Resultados</h2>
+        <div id="results" class="results"></div>
+        <div id="glossary"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© PGx · Interfaz futurista violeta/azul — by IA</span>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
